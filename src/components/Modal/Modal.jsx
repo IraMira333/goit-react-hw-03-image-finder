@@ -29,7 +29,7 @@ export default class Modal extends Component {
     const { largeImageURL, tags } = this.props.dataImage;
     return (
       <div className={css.overlay} onClick={this.closeOverlay}>
-        <div>
+        <div className={css.modal}>
           <img src={largeImageURL} alt={tags} />
         </div>
       </div>
