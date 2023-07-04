@@ -5,12 +5,11 @@ import ImageGalleryItem from 'components/ImageGallery/ImageGalleryItem';
 
 const ImageGallery = ({ images }) => {
   return (
-    <ul className="gallery">
+    <ul className={css.imageGallery}>
       {images.map(({ id, tags, webformatURL, largeImageURL }) => {
         return (
-          <li className={css.photoLi} key={id}>
+          <li className={css.imageGalleryItem} key={id}>
             <ImageGalleryItem
-              className={css.photo}
               tags={tags}
               webformatURL={webformatURL}
               largeImageURL={largeImageURL}
