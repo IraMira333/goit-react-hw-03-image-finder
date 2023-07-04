@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import Searchbar from './Searchbar/Searchbar';
 import { searchImages, imagesPerPage } from './API/Api';
 import { Vortex } from 'react-loader-spinner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ImageGallery from './ImageGallery/ImageGallery';
+import Searchbar from './Searchbar/Searchbar';
+import LoadMoreBtn from './Button/LoadMoreBtn';
 
 const toastConfig = {
   position: 'top-center',
@@ -27,14 +28,38 @@ export class App extends Component {
     error: null,
   };
 
-  async componentDidMount() {
+  componentDidUpdate(prevProps, prevState) {
+    const { query, page } = this.state;
+    if (prevState.query !== query || prevState.page !== page) {
+      this.getRequest();
+    }
+  }
+  handleBtnClick = () => {
+    this.setState(prevState => {
+      return { page: prevState.page + 1 };
+    });
+  };
+
+  async getRequest() {
     try {
       this.setState({ isLoading: true });
-      const respImgs = await searchImages();
-      const images = respImgs.hits;
 
-      this.setState({ images });
-      toast.success(`We found ${respImgs.total} images`, toastConfig);
+      const respImgs = await searchImages(this.state.query, this.state.page);
+      const images = respImgs.hits;
+      const totalImages = respImgs.total;
+      if (!totalImages) {
+        toast.warning(`No images found`, toastConfig);
+        return;
+      }
+
+      if (totalImages > 0 && this.state.page === 1) {
+        toast.success(`We found ${totalImages} images`, toastConfig);
+      }
+
+      this.setState(prevState => ({
+        images: [...prevState.images, ...images],
+        totalImages,
+      }));
     } catch (error) {
       this.setState({ error: error.message });
       toast.error(error.message, toastConfig);
@@ -42,7 +67,6 @@ export class App extends Component {
       this.setState({ isLoading: false });
     }
   }
-
   searchImagesInput = query => {
     if (this.state.query === query) {
       return;
@@ -50,22 +74,21 @@ export class App extends Component {
     this.setState({ query, page: 1, images: [] });
   };
 
-  // loadMor = () => {
-  //   this.setState(prevState => {
-  //     return {
-  //       page: prevState.page + 1,
-  //     };
-  //   });
-  // };
-  // };
+  loadMore = () => {
+    this.setState(prevState => {
+      return {
+        page: prevState.page + 1,
+      };
+    });
+  };
 
   render() {
+    const { query, images, page, totalImages, isLoading, error } = this.state;
     return (
       <div>
-        <Searchbar searchImagesInput={this.searchImagesInput} />
-        <h2>I'm here</h2>
-        {this.state.error !== null && <p>{this.state.error}</p>}
-        {this.state.isLoading && (
+        <Searchbar onSubmit={this.searchImagesInput} />
+
+        {isLoading && (
           <Vortex
             visible={true}
             height="80"
@@ -76,10 +99,12 @@ export class App extends Component {
             colors={['red', 'green', 'blue', 'yellow', 'orange', 'purple']}
           />
         )}
-        {this.state.images.length > 0 &&
-          this.state.images.map(({ id, tags, webformatURL, largeImageURL }) => {
-            return <div key={id}>{tags}</div>;
-          })}
+        {images.length > 0 && <ImageGallery images={images} />}
+        {images.length > 0 &&
+          totalImages / imagesPerPage > 1 &&
+          Math.ceil(totalImages / imagesPerPage) !== page && (
+            <LoadMoreBtn loadMore={this.loadMore} />
+          )}
         <ToastContainer
           position="top-center"
           autoClose={5000}
