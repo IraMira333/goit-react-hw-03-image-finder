@@ -83,7 +83,7 @@ export class App extends Component {
   };
 
   render() {
-    const { query, images, page, totalImages, isLoading, error } = this.state;
+    const { images, page, totalImages, isLoading } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.searchImagesInput} />
