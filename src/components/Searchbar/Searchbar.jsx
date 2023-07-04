@@ -10,13 +10,12 @@ export default class Searchbar extends Component {
   };
 
   handleChangeInput = e => {
-    console.log(e.target.value);
     this.setState({ searching: e.target.value });
   };
 
   onSubmit = e => {
     e.preventDefault();
-    if (this.state.search.trim() === '') {
+    if (this.state.searching.trim() === '') {
       toast.warn('Please enter a request!', {
         position: 'top-center',
         autoClose: 5000,
@@ -29,25 +28,21 @@ export default class Searchbar extends Component {
       });
       return;
     }
-    this.props.searchImages(this.state.searching.trim());
-    console.log(this.state.searching);
-    this.setState({
-      searching: '',
-    });
+    this.props.onSubmit(this.state.searching.trim());
   };
 
   render() {
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.onSubmit}>
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
+      <header className={css.searchbar}>
+        <form className={css.searchForm} onSubmit={this.onSubmit}>
+          <button type="submit" className={css.searchFormBtn}>
+            <span className={css.searchFormBtnLabel}>Search</span>
           </button>
 
           <input
-            className="input"
+            className={css.searchFormBtnInput}
             type="text"
-            value={this.state.search}
+            value={this.state.searching}
             onChange={this.handleChangeInput}
             autoComplete="off"
             autoFocus
