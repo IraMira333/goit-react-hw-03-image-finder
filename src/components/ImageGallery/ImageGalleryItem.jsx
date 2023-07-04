@@ -30,7 +30,7 @@ export default class ImageGalleryItem extends Component {
       <>
         <img
           onClick={this.showModalWindow}
-          className={css.photo}
+          className={css.galleryItemImage}
           src={webformatURL}
           alt={tags}
         />
