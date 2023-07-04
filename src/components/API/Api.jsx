@@ -12,9 +12,9 @@ const options = new URLSearchParams({
   per_page: imagesPerPage,
 }).toString();
 
-export const searchImages = async (dataSubmit, page) => {
+export const searchImages = async (query, page) => {
   const { data } = await axios.get(
-    `${URL}?key=${API_KEY}&q=${dataSubmit}&page=${page}&${options}`
+    `${URL}?key=${API_KEY}&q=${query}&page=${page}&${options}`
   );
   return data;
 };
