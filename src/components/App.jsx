@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { searchImages, imagesPerPage } from '../API/Api';
+import { searchImages } from '../API/Api';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -53,20 +53,28 @@ export class App extends Component {
     try {
       this.setState({ isLoading: true });
 
-      const respImgs = await searchImages(this.state.query, this.state.page);
-      const images = respImgs.hits;
-      const totalImages = respImgs.total;
+      const {
+        hits: images,
+        total,
+        totalHits: totalImages,
+      } = await searchImages(this.state.query, this.state.page);
+
       if (!totalImages) {
         toast.warning(`No images found`, toastConfig);
         return;
       }
 
       if (totalImages > 0 && this.state.page === 1) {
-        toast.success(`We found ${totalImages} images`, toastConfig);
+        toast.success(`We found ${total} images`, toastConfig);
       }
-
+      const shortimages = images.map(
+        ({ id, tags, largeImageURL, webformatURL }) => {
+          return { id, tags, largeImageURL, webformatURL };
+        }
+      );
+      console.log(shortimages);
       this.setState(prevState => ({
-        images: [...prevState.images, ...images],
+        images: [...prevState.images, ...shortimages],
         totalImages,
       }));
     } catch (error) {
@@ -86,7 +94,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, page, totalImages, isLoading } = this.state;
+    const { images, totalImages, isLoading } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.searchImagesInput} />
