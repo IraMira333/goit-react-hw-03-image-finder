@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { searchImages, imagesPerPage } from './API/Api';
+import { searchImages, imagesPerPage } from '../API/Api';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
