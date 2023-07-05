@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { searchImages, imagesPerPage } from './API/Api';
-import { Vortex } from 'react-loader-spinner';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
 import LoadMoreBtn from './Button/LoadMoreBtn';
+import Loader from './Loader/Loader';
 
 const toastConfig = {
   position: 'top-center',
@@ -88,17 +89,7 @@ export class App extends Component {
       <div>
         <Searchbar onSubmit={this.searchImagesInput} />
 
-        {isLoading && (
-          <Vortex
-            visible={true}
-            height="200"
-            width="200"
-            ariaLabel="vortex-loading"
-            wrapperStyle={{}}
-            wrapperClass="vortex-wrapper"
-            colors={['red', 'green', 'blue', 'yellow', 'orange', 'purple']}
-          />
-        )}
+        {isLoading && <Loader />}
         {images.length > 0 && <ImageGallery images={images} />}
         {images.length > 0 &&
           totalImages / imagesPerPage > 1 &&
