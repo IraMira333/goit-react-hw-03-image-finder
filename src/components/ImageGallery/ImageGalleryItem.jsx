@@ -5,27 +5,19 @@ import css from './ImageGallery.module.css';
 
 export default class ImageGalleryItem extends Component {
   state = {
-    dataImage: {},
     openModalWindow: false,
   };
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.dataImage !== this.state.dataImage) {
-      this.setState(prevState => ({ openModalWindow: true }));
-    }
-  }
 
   showModalWindow = () => {
-    const { tags, largeImageURL } = this.props;
-    const data = { largeImageURL, tags };
-    this.setState(prevState => ({ dataImage: data }));
+    this.setState({ openModalWindow: true });
   };
 
   closeModalWindow = () => {
-    this.setState(prevState => ({ openModalWindow: false }));
+    this.setState({ openModalWindow: false });
   };
 
   render() {
-    const { tags, webformatURL } = this.props;
+    const { tags, webformatURL, largeImageURL } = this.props;
     return (
       <>
         <img
@@ -36,7 +28,7 @@ export default class ImageGalleryItem extends Component {
         />
         {this.state.openModalWindow === true && (
           <Modal
-            dataImage={this.state.dataImage}
+            dataImage={{ tags, largeImageURL }}
             closeModalWindow={this.closeModalWindow}
           />
         )}
