@@ -91,8 +91,8 @@ export class App extends Component {
         {isLoading && (
           <Vortex
             visible={true}
-            height="80"
-            width="80"
+            height="200"
+            width="200"
             ariaLabel="vortex-loading"
             wrapperStyle={{}}
             wrapperClass="vortex-wrapper"
