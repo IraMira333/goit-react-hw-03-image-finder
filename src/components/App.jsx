@@ -35,6 +35,14 @@ export class App extends Component {
       this.getRequest();
     }
   }
+
+  searchImagesInput = query => {
+    if (this.state.query === query) {
+      return;
+    }
+    this.setState({ query, page: 1, images: [], totalImages: 0 });
+  };
+
   handleBtnClick = () => {
     this.setState(prevState => {
       return { page: prevState.page + 1 };
@@ -68,12 +76,6 @@ export class App extends Component {
       this.setState({ isLoading: false });
     }
   }
-  searchImagesInput = query => {
-    if (this.state.query === query) {
-      return;
-    }
-    this.setState({ query, page: 1, images: [] });
-  };
 
   loadMore = () => {
     this.setState(prevState => {
@@ -91,11 +93,14 @@ export class App extends Component {
 
         {isLoading && <Loader />}
         {images.length > 0 && <ImageGallery images={images} />}
-        {images.length > 0 &&
+        {!isLoading && images.length !== totalImages && (
+          <LoadMoreBtn loadMore={this.loadMore} />
+        )}
+        {/* {images.length > 0 &&
           totalImages / imagesPerPage > 1 &&
           Math.ceil(totalImages / imagesPerPage) !== page && (
             <LoadMoreBtn loadMore={this.loadMore} />
-          )}
+          )} */}
         <ToastContainer
           position="top-center"
           autoClose={5000}
