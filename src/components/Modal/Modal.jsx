@@ -20,7 +20,7 @@ export default class Modal extends Component {
   };
 
   closeOverlay = evt => {
-    if (evt.target.nodeName === 'DIV') {
+    if (evt.target === evt.currentTarget) {
       this.props.closeModalWindow();
     }
   };
